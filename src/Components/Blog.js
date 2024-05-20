@@ -4,6 +4,9 @@ import { useState, useRef, useEffect } from "react";
 //Import fireStore reference from frebaseInit file
 import {db} from "../firebase-init";
 
+//Import all the required functions from fireStore
+import { collection, addDoc} from "firebase/firestore"; 
+
 export default function Blog(){
 
     const [formData, setformData] = useState({title:"", content:""})
@@ -20,6 +23,29 @@ export default function Blog(){
         titleRef.current.focus();
 
         setBlogs([{title: formData.title,content:formData.content}, ...blogs]);
+
+        /*********************************************************************** */
+        /** Add a new document with an auto generated id. */ 
+        /*********************************************************************** */
+
+        //addDoc either this way
+
+        //await addDoc(collection(db, "blogs"), {
+            // title: formData.title,
+            // content: formData.content,
+            // createdOn: new Date()
+        // })
+
+        //addDoc either this way
+        const docRef = collection(db, "blogs");
+            
+        await addDoc(docRef, {
+                title: formData.title,
+                content: formData.content,
+                createdOn: new Date()
+            });
+
+        /*********************************************************************** */
         
         setformData({title: "", content: ""});
     }
